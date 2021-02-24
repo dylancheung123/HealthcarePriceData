@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { SecureRoute, Security, LoginCallback } from '@okta/okta-react'
 import { OktaAuth } from '@okta/okta-auth-js'
+import { Provider } from 'react-redux'
 
+import store from './Store'
 import Page from './components/Page/Page'
 import Home from './components/Home/Home'
-import Terms from './components/Terms/Terms'
-import './styles.css'
+import Counter from './components/Counter/Counter'
+import './styles.less'
 
 const oktaAuth = new OktaAuth({
   issuer: 'https://dev-41785380.okta.com/oauth2/default',
@@ -16,13 +18,15 @@ const oktaAuth = new OktaAuth({
 });
 
 const App = () => (
-  <Router className='router'>
-    <Security oktaAuth={oktaAuth}>
-      <Route path='/' render={() => Page(Home)} exact={true}/>
-      <SecureRoute path='/terms' render={() => Page(Terms)}/>
-      <Route path='/login/callback' component={LoginCallback} />
-    </Security>
-  </Router>
+  <Provider store={store}>
+    <Router className='router'>
+      <Security oktaAuth={oktaAuth}>
+        <Route path='/' render={() => Page(Home)} exact={true}/>
+        <SecureRoute path='/counter' render={() => Page(Counter)}/>
+        <Route path='/login/callback' component={LoginCallback} />
+      </Security>
+    </Router>
+  </Provider>
 )
 
 ReactDOM.render(<App/>, document.getElementById('root'))
